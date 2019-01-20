@@ -25,6 +25,13 @@ public class Ship {
 		return occupiedSquares;
 	}
 
+	public void setOccupiedSquares(List<Square> occupiedSquares){
+		this.occupiedSquares = occupiedSquares;
+	}
+
+  public String getKind(){
+		return kind;
+	}
 
 	public int getSize () {
 		switch (this.kind) {
