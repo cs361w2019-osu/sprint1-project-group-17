@@ -19,7 +19,7 @@ public class Board {
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
 	public boolean placeShip(Ship ship, int x, char y, boolean isVertical) {
-		int MAX = 9;
+		int MAX = 10;
 		int shipSize = ship.getSize();
 		int col = charToint(y);
 
@@ -30,7 +30,7 @@ public class Board {
 		/* check boundary*/
 		if (isVertical){
 			for(int i=0;i<shipSize;i++){
-				if((x-i)<0){
+				if((x+i)>MAX){
 					return false;
 				}
 			}
@@ -48,7 +48,7 @@ public class Board {
 			for(Square occSqu : exShips.getOccupiedSquares()){
 				if(isVertical){
 					for(int i=0;i<shipSize;i++){
-						int tInt = x - i;
+						int tInt = x + i;
 						if(occSqu.getRow() == tInt && occSqu.getColumn() == y){
 							return false;
 						}
@@ -68,7 +68,7 @@ public class Board {
 		List<Square> occupy = new ArrayList<>();
 		if(isVertical){
 			for(int i=0;i<shipSize;i++){
-				int tInt = x - i;
+				int tInt = x + i;
 				occupy.add(new Square(tInt,y));
 			}
 		}
