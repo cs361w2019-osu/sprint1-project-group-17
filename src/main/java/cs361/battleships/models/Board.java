@@ -111,12 +111,12 @@ public class Board {
 
 	public int charToint(char y){
 		int temp = ((int)y);
-		temp = temp - 65;
+		temp = temp - 65 + 1;
 		return temp;
 	}
 
 	public char intTochar(int y){
-		y = y + 65;
+		y = y + 65 - 1;
 		return ((char)y);
 	}
 }
