@@ -32,11 +32,12 @@ public class Board {
 		return null;
 	}
 
+	// Method checks if all of a player's ships have been sunk
 	public boolean checkGameOver() {
 		List<Result> pastAttacks = getAttacks();
 		int sunkenShips = 0;
-		for (int i = 0; i < pastAttacks.size(); i++) {
-			if (pastAttacks.get(i).getResult() == AttackStatus.SUNK) {
+		for (Result elem : pastAttacks) {
+			if (elem.getResult() == AttackStatus.SUNK) {
 				sunkenShips++;
 			}
 		}
