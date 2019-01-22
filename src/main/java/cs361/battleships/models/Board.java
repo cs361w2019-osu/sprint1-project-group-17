@@ -25,6 +25,7 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		//TODO Implement
+
 		return null;
 	}
 
