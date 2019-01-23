@@ -7,7 +7,7 @@ public class Result {
 	private Square location;
 
 	public AttackStatus getResult() {
-		return this.result;
+		return result;
 	}
 
 	public void setResult(AttackStatus result) {
@@ -15,7 +15,7 @@ public class Result {
 	}
 
 	public Ship getShip() {
-		return this.ship;
+		return ship;
 	}
 
 	public void setShip(Ship ship) {
@@ -23,7 +23,7 @@ public class Result {
 	}
 
 	public Square getLocation() {
-		return this.location;
+		return location;
 	}
 
 	public void setLocation(Square square) {

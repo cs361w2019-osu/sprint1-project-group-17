@@ -5,8 +5,6 @@ import java.util.List;
 
 public class Board {
 
-	private List<Ship> ships;
-	private List<Result> attacks;
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
@@ -93,7 +91,33 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		//TODO Implement
-		return null;
+		//Set position to attack
+		var pos = new Result();
+		pos.setLocation(new Square(x,y));
+
+		//make sure they have valid input (coordinates)
+		//return position
+		if (x < 1 || x > 10 || y < 'A' || y > 'J'){
+			pos.setResult(AttackStatus.INVALID);
+			System.out.println("INVALID!");
+			return pos;
+		}
+
+		//if attack meets any of the ship locations then hit
+		if (pos.getLocation().getRow() == x && pos.getLocation().getColumn() == y) {
+			pos.setResult(AttackStatus.HIT);
+			System.out.println("HIT!");
+			return pos;
+		}
+
+		//if attach does not hit a ship location then miss
+			pos.setResult(AttackStatus.MISS);
+			System.out.println("MISS!");
+
+		//update attacks array
+		attacks.add(pos);
+
+		return pos;
 	}
 
 	// Method checks if all of a player's ships have been sunk
