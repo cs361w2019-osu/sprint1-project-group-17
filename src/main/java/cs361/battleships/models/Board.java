@@ -5,9 +5,6 @@ import java.util.List;
 
 public class Board {
 
-	private AttackStatus atackstatus;
-	private List<Ship> ships;
-	private List<Result> attacks;
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
@@ -106,6 +103,19 @@ public class Board {
 			return pos;
 		}
 
+		//if attack meets any of the ship locations then hit
+		if (pos.getLocation().getRow() == x && pos.getLocation().getColumn() == y) {
+			pos.setResult(AttackStatus.HIT);
+			System.out.println("HIT!");
+			return pos;
+		}
+
+		//if attach does not hit a ship location then miss
+			pos.setResult(AttackStatus.MISS);
+			System.out.println("MISS!");
+
+		//update attacks array
+		attacks.add(pos);
 
 		return pos;
 	}
