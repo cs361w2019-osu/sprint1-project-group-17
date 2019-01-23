@@ -14,6 +14,7 @@ public class Result {
 
 	public void setResult(AtackStatus result) {
 		//TODO implement
+		randomasdpoFE
 		this.status = result;
 	}
 
