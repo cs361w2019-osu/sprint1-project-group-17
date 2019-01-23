@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom; //library for random number
 
 import static cs361.battleships.models.AtackStatus.*;
+
 
 public class Game {
 
@@ -50,17 +52,17 @@ public class Game {
     }
 
     private char randCol() {
-        // TODO implement
-        return 'X';
+        char column = (char)ThreadLocalRandom.current().nextInt(65,75);
+        return column;
     }
 
     private int randRow() {
-        // TODO implement
-        return 0;
+        int row = ThreadLocalRandom.current().nextInt(1,11 );
+        return row;
     }
 
     private boolean randVertical() {
-        // TODO implement
-        return false;
+        boolean vertical = ThreadLocalRandom.current().nextBoolean();
+        return vertical;
     }
 }
