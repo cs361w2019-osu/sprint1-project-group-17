@@ -10,6 +10,9 @@ public class Board {
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
+	private List<Ship> ships;
+	private List<Result> attacks;
+
 	public Board() {
 		this.ships = new ArrayList<>();
 		this.attacks = new ArrayList<>();
@@ -93,8 +96,24 @@ public class Board {
 		return null;
 	}
 
+	// Method checks if all of a player's ships have been sunk
+	public boolean checkGameOver() {
+		List<Result> pastAttacks = getAttacks();
+		int sunkenShips = 0;
+		for (Result elem : pastAttacks) {
+			if (elem.getResult() == AttackStatus.SUNK) {
+				sunkenShips++;
+			}
+		}
+		if (sunkenShips >= 3) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public List<Ship> getShips() {
-		return ships;
+		return this.ships;
 	}
 
 	public void setShips(List<Ship> ships) {
@@ -102,7 +121,7 @@ public class Board {
 	}
 
 	public List<Result> getAttacks() {
-		return attacks;
+		return this.attacks;
 	}
 
 	public void setAttacks(List<Result> attacks) {
