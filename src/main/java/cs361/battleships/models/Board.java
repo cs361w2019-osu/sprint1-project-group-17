@@ -94,21 +94,20 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		//TODO Implement
-		AtackStatus = attack(x,y).getResult();
-		switch (AtackStatus){
-			case MISS:
-				System.out.println("MISS!");
-			case HIT:
-				System.out.println("HIT!");
-			case SUNK:
-				System.out.println("SUNK!");
-			case SURRENDER:
-				System.out.println("SURRENDER!");
-			case INVALID:
-				System.out.println("INVALID!");
+		//Set position to attack
+		var pos = new Result();
+		pos.setLocation(new Square(x,y));
+
+		//make sure they have valid input (coordinates)
+		//return position
+		if (x < 1 || x > 10 || y < 'A' || y > 'J'){
+			pos.setResult(AttackStatus.INVALID);
+			System.out.println("INVALID!");
+			return pos;
 		}
-		return null;
-		return null;
+
+
+		return pos;
 	}
 
 	// Method checks if all of a player's ships have been sunk
