@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Board {
 
+	private AttackStatus atackstatus;
 	private List<Ship> ships;
 	private List<Result> attacks;
 	/*
@@ -93,6 +94,20 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		//TODO Implement
+		AtackStatus = attack(x,y).getResult();
+		switch (AtackStatus){
+			case MISS:
+				System.out.println("MISS!");
+			case HIT:
+				System.out.println("HIT!");
+			case SUNK:
+				System.out.println("SUNK!");
+			case SURRENDER:
+				System.out.println("SURRENDER!");
+			case INVALID:
+				System.out.println("INVALID!");
+		}
+		return null;
 		return null;
 	}
 
