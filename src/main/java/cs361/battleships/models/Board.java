@@ -1,16 +1,17 @@
 package cs361.battleships.models;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
+
+	private List<Ship> ships;
+	private List<Result> attacks;
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
 	private List<Ship> ships;
 	private List<Result> attacks;
-  private AtackStatus atackstatus;
 
 	public Board() {
 		this.ships = new ArrayList<>();
@@ -92,19 +93,6 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		//TODO Implement
-		atackstatus = attack(x,y).getResult();
-		switch (atackstatus){
-			case MISS:
-				System.out.println("MISS!");
-			case HIT:
-				System.out.println("HIT!");
-			case SUNK:
-				System.out.println("SUNK!");
-			case SURRENDER:
-				System.out.println("SURRENDER!");
-			case INVALID:
-				System.out.println("INVALID!");
-		}
 		return null;
 	}
 
