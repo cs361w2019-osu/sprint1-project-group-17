@@ -29,7 +29,7 @@ public class Ship {
 		this.occupiedSquares = occupiedSquares;
 	}
 
-  public String getKind(){
+  	public String getKind(){
 		return kind;
 	}
 
