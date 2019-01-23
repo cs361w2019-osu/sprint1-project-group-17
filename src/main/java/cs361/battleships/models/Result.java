@@ -23,7 +23,6 @@ public class Result {
 	}
 
 	public void setShip(Ship ship) {
-		//TODO implement
 		this.ship = ship;
 	}
 
@@ -33,7 +32,6 @@ public class Result {
 	}
 
 	public void setLocation(Square square) {
-		//TODO implement
 		this.location = square;
 	}
 }
