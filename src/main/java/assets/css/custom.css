@@ -1,19 +1,25 @@
 /* Add additional stylesheets below
 -------------------------------------------------- */
 
+.title {
+    text-align: center;
+    font-size: 25px;
+}
+
 .battleGrid {
     border: 1px solid black;
     border-spacing: 0px;
+    margin: auto;
 }
 
 .battleGrid tr {
     border: 1px solid black;
-    height: 30px;
+    height: 25px;
 }
 
 .battleGrid td {
     border: 1px solid black;
-    width: 30px;
+    width: 60px;
 }
 
 td:hover {
@@ -38,4 +44,55 @@ td:hover {
 
 .miss {
     background-color: blue;
+}
+
+.log {
+    width: 620px;
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 5px;
+    border: 2px solid black;
+    text-align: center;
+}
+
+.button {
+    background-color: #555555;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 2px 2px;
+    cursor: pointer;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.button_container{
+    margin: auto;
+    width: 65%;
+    content: "";
+    clear: both;
+    display: table;
+}
+
+ul {
+    list-style-type: none;
+    display:table;
+    margin:0 auto;
+}
+
+.buttons {
+    float: left;
+    width: 50%;
+    padding: 20px;
+}
+
+.hide {
+    display: none;
 }
