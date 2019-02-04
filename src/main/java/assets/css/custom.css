@@ -68,6 +68,9 @@ td:hover {
     margin: 2px 2px;
     cursor: pointer;
 }
+.clicked {
+    background-color: red;
+}
 
 * {
   box-sizing: border-box;
