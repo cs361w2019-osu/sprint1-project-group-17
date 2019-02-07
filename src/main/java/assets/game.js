@@ -3,6 +3,7 @@ var placedShips = 0;
 var game;
 var shipType;
 var vertical;
+var clicked = false;
 
 function makeGrid(table, isPlayer) {
     for (i=0; i<10; i++) {
@@ -24,10 +25,19 @@ function markHits(board, elementId, surrenderText) {
         else if (attack.result === "HIT")
             className = "hit";
         else if (attack.result === "SUNK")
-            className = "hit"
-        else if (attack.result === "SURRENDER")
+            className = "sink"
+        else if (attack.result === "SURRENDER"){
             alert(surrenderText);
+             window.location.reload();
+             }
         document.getElementById(elementId).rows[attack.location.row-1].cells[attack.location.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add(className);
+        if(attack.result === "SUNK"){
+            attack.ship.occupiedSquares.forEach((square) => {
+                document.getElementById(elementId).rows[square.row-1].cells[square.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add("sink");
+                });
+            }
+        if(elementId === "opponent")
+            document.getElementById("logText").innerHTML = className;
     });
 }
 
@@ -75,10 +85,11 @@ function cellClick() {
                 registerCellListener((e) => {});
             }
         });
-    } else {
+    } else if (clicked) {
         sendXhr("POST", "/attack", {game: game, x: row, y: col}, function(data) {
             game = data;
             redrawGrid();
+            attackselected = false;
         })
     }
 }
@@ -139,6 +150,20 @@ function initGame() {
         shipType = "BATTLESHIP";
        registerCellListener(place(4));
     });
+    document.getElementById("attack_button").addEventListener("click", function() {
+         this.classList.toggle("clicked");
+         if(clicked){
+         clicked = false;
+         }
+         else {
+         clicked = true;
+         }
+    });
+    document.getElementById("surrender_button").addEventListener("click", function(e) {
+          alert("You surrender. :<");
+          window.location.reload();
+        });
+
     sendXhr("GET", "/game", {}, function(data) {
         game = data;
     });

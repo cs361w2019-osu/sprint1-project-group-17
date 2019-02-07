@@ -80,8 +80,12 @@ td:hover {
     cursor: pointer;
 }
 
+.clicked {
+    background-color: red;
+}
+
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 .button_container{
@@ -106,4 +110,16 @@ ul {
 
 .hide {
     display: none;
+}
+
+.checkbox_container {
+     background-color: #555555;
+     border: none;
+     color: white;
+     padding: 10px 20px;
+     text-align: center;
+     text-decoration: none;
+     display: inline-block;
+     font-size: 16px;
+     margin: 2px 2px;
 }
