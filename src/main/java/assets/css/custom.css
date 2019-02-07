@@ -1,6 +1,17 @@
 /* Add additional stylesheets below
 -------------------------------------------------- */
 
+/* Ipad portrait media queries 768x1024*/
+@media only screen
+and (min-device-width : 768px)
+/*ipad pro screen: 1024x1336 */
+and (max-device-width : 1336px)
+and (orientation : portrait) { /* STYLES GO HERE */
+    .message{
+        display: none;
+    }
+}
+
 .title {
     text-align: center;
     font-size: 25px;
