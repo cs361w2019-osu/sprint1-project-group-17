@@ -1,20 +1,23 @@
 <#import "../layout/defaultLayout.ftl.html" as layout>
 <@layout.myLayout "Home page">
 
-
-<h1 class="title">The Battleship Game</h1>
-
-<table id="opponent" class="battleGrid">
-</table>
-
-<div class="log">
-    <div id="logText"> Click place ship buttons to place ship, turn on attack button then click enemy's board to attack. </div>
-
+<div align="center" class="message sink">
+    <h3>Notice!</h3>
+    <p>This sight works best on the iPad screen.</p>
 </div>
 
-<table id="player" class="battleGrid">
+<h1 align="center" class="title">The Battleship Game</h1>
+
+<table align="center" id="opponent" class="battleGrid">
 </table>
-<div class="button_container">
+
+<div align="center" class="log">
+    <div id="logText"> Click place ship buttons to place ship, turn on attack button then click enemy's board to attack. </div>
+</div>
+
+<table align="center" id="player" class="battleGrid">
+</table>
+<div align="center" class="button_container">
     <div class="buttons">
         <ul>
             <li><button class="button" id="place_minesweeper">Place Minesweeper</button></li>
