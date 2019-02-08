@@ -170,5 +170,5 @@ function initGame() {
     
     setTimeout(function(){
 	    document.getElementById("notice").classList.add('hide');
-    }, 5000);
+    }, 10000);
 };
