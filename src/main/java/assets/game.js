@@ -167,4 +167,8 @@ function initGame() {
     sendXhr("GET", "/game", {}, function(data) {
         game = data;
     });
+    
+    setTimeout(function(){
+	    document.getElementById("notice").classList.add('hide');
+    }, 10000);
 };
