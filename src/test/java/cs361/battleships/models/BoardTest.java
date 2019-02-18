@@ -38,7 +38,7 @@ public class BoardTest {
         Ship minesweeper = new Ship("MINESWEEPER");
         board.placeShip(minesweeper, 1, 'A', true);
         minesweeper = board.getShips().get(0);
-        Result result = board.attack(1, 'A');
+        Result result = board.attack(2, 'A');
         assertEquals(AtackStatus.HIT, result.getResult());
         assertEquals(minesweeper, result.getShip());
     }
@@ -47,8 +47,8 @@ public class BoardTest {
     public void testAttackSameSquareMultipleTimes() {
         Ship minesweeper = new Ship("MINESWEEPER");
         board.placeShip(minesweeper, 1, 'A', true);
-        board.attack(1, 'A');
-        Result result = board.attack(1, 'A');
+        board.attack(2, 'A');
+        Result result = board.attack(2, 'A');
         assertEquals(AtackStatus.INVALID, result.getResult());
     }
 
@@ -64,7 +64,7 @@ public class BoardTest {
     public void testSurrender() {
         board.placeShip(new Ship("MINESWEEPER"), 1, 'A', true);
         board.attack(1, 'A');
-        var result = board.attack(2, 'A');
+        var result = board.attack(1, 'A');
         assertEquals(AtackStatus.SURRENDER, result.getResult());
     }
 
