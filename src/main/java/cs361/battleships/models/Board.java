@@ -46,7 +46,8 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		Result attackResult = attack(new Square(x, y));
-		attacks.add(attackResult);
+		if (!(attackResult.getResult() == AtackStatus.BLOCKED))
+			attacks.add(attackResult);
 		return attackResult;
 	}
 
