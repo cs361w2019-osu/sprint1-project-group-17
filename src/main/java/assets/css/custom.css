@@ -41,6 +41,14 @@ td:hover {
     background-color: gray;
 }
 
+.empty {
+    background-color: gray;
+}
+
+.hasShip{
+    background-color: black;
+}
+
 .occupied {
     background-color: black;
 }
@@ -56,6 +64,7 @@ td:hover {
 .miss {
     background-color: blue;
 }
+
 
 .log {
     width: 620px;

@@ -4,6 +4,8 @@ var game;
 var shipType;
 var vertical;
 var clicked = false;
+var sonarPulseCount = 2;
+var sonarPulse = false;
 
 function makeGrid(table, isPlayer) {
     for (i=0; i<10; i++) {
@@ -18,6 +20,14 @@ function makeGrid(table, isPlayer) {
 }
 
 function markHits(board, elementId, surrenderText) {
+    board.sonars.forEach((sonar) => {
+            let className;
+            if (sonar.result === "MISS")
+                className = "empty";
+            else if (sonar.result === "HIT")
+                className = "hasShip";
+            document.getElementById(elementId).rows[sonar.location.row-1].cells[sonar.location.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add(className);
+     });
     board.attacks.forEach((attack) => {
         let className;
         if (attack.result === "MISS")
@@ -35,6 +45,8 @@ function markHits(board, elementId, surrenderText) {
             attack.ship.occupiedSquares.forEach((square) => {
                 document.getElementById(elementId).rows[square.row-1].cells[square.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add("sink");
                 });
+                 if(elementId === "opponent")
+                     document.getElementById("sonarPulse_button").classList.remove("hide");
             }
         if(elementId === "opponent")
             document.getElementById("logText").innerHTML = className;
@@ -85,12 +97,20 @@ function cellClick() {
                 registerCellListener((e) => {});
             }
         });
+    } else if (sonarPulse) {
+              sendXhr("POST","/sonar", {game: game, x: row, y: col} , function(data){
+                  game = data;
+                  redrawGrid();
+                  sonarPulse = false;
+                  document.getElementById("sonarPulse_button").classList.remove("clicked");
+                  sonarPulseCount = sonarPulseCount - 1;
+               });
     } else if (clicked) {
         sendXhr("POST", "/attack", {game: game, x: row, y: col}, function(data) {
             game = data;
             redrawGrid();
             attackselected = false;
-        })
+        });
     }
 }
 
@@ -151,19 +171,35 @@ function initGame() {
        registerCellListener(place(4));
     });
     document.getElementById("attack_button").addEventListener("click", function() {
-         this.classList.toggle("clicked");
-         if(clicked){
-         clicked = false;
-         }
-         else {
-         clicked = true;
-         }
+        if(sonarPulse == false){
+           this.classList.toggle("clicked");
+           if(clicked){
+              clicked = false;
+           }
+           else {
+               clicked = true;
+                }
+        }
     });
     document.getElementById("surrender_button").addEventListener("click", function(e) {
           alert("You surrender. :<");
           window.location.reload();
         });
-
+    document.getElementById("sonarPulse_button").addEventListener("click", function(){
+            if(sonarPulseCount > 0){
+                this.classList.toggle("clicked");
+                if(sonarPulse){
+                sonarPulse = false;
+                }
+                else {
+                    sonarPulse = true;
+                    if(clicked){
+                        document.getElementById("attack_button").classList.remove("clicked");
+                        clicked = false;
+                    }
+                }
+            }
+        });
     sendXhr("GET", "/game", {}, function(data) {
         game = data;
     });

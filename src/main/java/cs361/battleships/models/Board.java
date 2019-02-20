@@ -11,6 +11,7 @@ public class Board {
 	@JsonProperty private List<Ship> ships;
 	@JsonProperty private List<Result> attacks;
 	@JsonProperty private List<Result> blocks;
+	@JsonProperty private List<Result> sonars;
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
@@ -18,6 +19,7 @@ public class Board {
 		ships = new ArrayList<>();
 		attacks = new ArrayList<>();
 		blocks = new ArrayList<>();
+		sonars = new ArrayList<>();
 	}
 
 	/*
@@ -73,6 +75,25 @@ public class Board {
 			}
 		}
 		return attackResult;
+	}
+
+	public void sonarPulse(int x , char y){
+		Square s = new Square(x,y);
+		if(!s.isOutOfBounds() && !sonars.stream().anyMatch(r -> r.getLocation().equals(s))){
+			Result sonarResult = sonarPulseAttack(s);
+			sonars.add(sonarResult);
+		}
+	}
+
+	private Result sonarPulseAttack(Square s){
+		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
+		if (shipsAtLocation.size() == 0) {
+			var sonarResult = new Result(s);
+			return sonarResult;
+		}
+		var hitShip = shipsAtLocation.get(0);
+		var sonarResult = hitShip.sonarAttack(s.getRow(), s.getColumn());
+		return sonarResult;
 	}
 
 	List<Ship> getShips() {
