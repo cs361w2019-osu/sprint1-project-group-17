@@ -109,6 +109,9 @@ public class Ship {
 			return new Result(attackedLocation);
 		}
 		var attackedSquare = square.get();
+		if (attackedSquare.isCap()){
+			return new Result(attackedLocation);
+		}
 		Result result = new Result(attackedSquare);
 		result.setResult(AtackStatus.HIT);
 		return result;
