@@ -20,6 +20,14 @@ function makeGrid(table, isPlayer) {
 }
 
 function markHits(board, elementId, surrenderText) {
+    board.sonars.forEach((sonar) => {
+            let className;
+            if (sonar.result === "MISS")
+                className = "empty";
+            else if (sonar.result === "HIT")
+                className = "hasShip";
+            document.getElementById(elementId).rows[sonar.location.row-1].cells[sonar.location.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add(className);
+     });
     board.attacks.forEach((attack) => {
         let className;
         if (attack.result === "MISS")

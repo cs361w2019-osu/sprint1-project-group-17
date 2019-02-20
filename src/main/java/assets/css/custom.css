@@ -57,6 +57,14 @@ td:hover {
     background-color: blue;
 }
 
+.empty {
+    background-color: gray;
+}
+
+.hasShip{
+    background-color: black;
+}
+
 .log {
     width: 620px;
     margin: auto;
