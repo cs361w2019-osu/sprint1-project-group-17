@@ -74,14 +74,19 @@ public class Ship {
 		}
 		var attackedSquare = square.get();
 
-		if (attackedSquare.isCap() && !attackedSquare.isCapHit()){
+		if(attackedSquare.isCap() && this.getKind().equals("MINESWEEPER")){
+			attackedSquare.hit();
+			attackedSquare.capHit();
+		}
+
+		else if (attackedSquare.isCap() && !attackedSquare.isCapHit()){
 			attackedSquare.capHit();
 			var result = new Result(attackedLocation);
 			result.setResult(AtackStatus.BLOCKED);
 			return result;
 		}
 
-		if (attackedSquare.isHit()) {
+		else if (attackedSquare.isHit()) {
 			var result = new Result(attackedLocation);
 			result.setResult(AtackStatus.INVALID);
 			return result;
