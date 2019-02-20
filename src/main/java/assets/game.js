@@ -20,6 +20,7 @@ function makeGrid(table, isPlayer) {
 function markHits(board, elementId, surrenderText) {
     board.attacks.forEach((attack) => {
         let className;
+        className = "MISS";
         if (attack.result === "MISS")
             className = "miss";
         else if (attack.result === "HIT")
@@ -38,6 +39,9 @@ function markHits(board, elementId, surrenderText) {
             }
         if(elementId === "opponent")
             document.getElementById("logText").innerHTML = className;
+    });
+    board.blocks.forEach((block) => {
+        document.getElementById(elementId).rows[block.location.row-1].cells[block.location.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add("miss");
     });
 }
 

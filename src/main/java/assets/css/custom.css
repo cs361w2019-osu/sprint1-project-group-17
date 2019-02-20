@@ -45,6 +45,10 @@ td:hover {
     background-color: black;
 }
 
+.miss {
+    background-color: blue;
+}
+
 .hit {
     background-color: orange;
 }
@@ -53,9 +57,6 @@ td:hover {
     background-color: red;
 }
 
-.miss {
-    background-color: blue;
-}
 
 .log {
     width: 620px;
