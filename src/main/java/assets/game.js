@@ -47,6 +47,7 @@ function markHits(board, elementId, surrenderText) {
                 });
                  if(elementId === "opponent")
                      document.getElementById("sonarPulse_button").classList.remove("hide");
+                     document.getElementById("sonarPulse_counter").classList.remove("hide");
             }
         if(elementId === "opponent")
             document.getElementById("logText").innerHTML = className;
@@ -104,6 +105,8 @@ function cellClick() {
                   sonarPulse = false;
                   document.getElementById("sonarPulse_button").classList.remove("clicked");
                   sonarPulseCount = sonarPulseCount - 1;
+                  var sonarPulseRemain = "SONAR PULSE REMAIN: " + sonarPulseCount.toString() ;
+                  document.getElementById("sonarPulse_counter").innerHTML = sonarPulseRemain;
                });
     } else if (clicked) {
         sendXhr("POST", "/attack", {game: game, x: row, y: col}, function(data) {
