@@ -4,6 +4,8 @@ var game;
 var shipType;
 var vertical;
 var clicked = false;
+var sonarPulseCount = 2;
+var sonarPulse = false;
 
 function makeGrid(table, isPlayer) {
     for (i=0; i<10; i++) {
@@ -35,6 +37,8 @@ function markHits(board, elementId, surrenderText) {
             attack.ship.occupiedSquares.forEach((square) => {
                 document.getElementById(elementId).rows[square.row-1].cells[square.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add("sink");
                 });
+                if(elementId === "opponent")
+                    document.getElementById("sonarPulse_button").classList.remove("hide");
             }
         if(elementId === "opponent")
             document.getElementById("logText").innerHTML = className;
@@ -163,7 +167,17 @@ function initGame() {
           alert("You surrender. :<");
           window.location.reload();
         });
-
+    document.getElementById("sonarPulse_button").addEventListener("click", function(){
+        if(sonarPulseCount > 0){
+            this.classList.toggle("clicked");
+            if(sonarPulse){
+            sonarPulse = false;
+            }
+            else {
+            sonarPulse = true;
+            }
+        }
+    });
     sendXhr("GET", "/game", {}, function(data) {
         game = data;
     });
