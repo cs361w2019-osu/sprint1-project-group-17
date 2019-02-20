@@ -102,6 +102,18 @@ public class Ship {
 		return result;
 	}
 
+	public Result sonarAttack(int x ,char y){
+		var attackedLocation = new Square(x, y);
+		var square = getOccupiedSquares().stream().filter(s -> s.equals(attackedLocation)).findFirst();
+		if (!square.isPresent()) {
+			return new Result(attackedLocation);
+		}
+		var attackedSquare = square.get();
+		Result result = new Result(attackedSquare);
+		result.setResult(AtackStatus.HIT);
+		return result;
+	}
+
 	@JsonIgnore
 	public boolean isSunk() {
 		if (getOccupiedSquares().stream().allMatch(s -> s.isHit()))
