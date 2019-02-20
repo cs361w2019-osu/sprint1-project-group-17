@@ -89,8 +89,16 @@ function cellClick() {
                 registerCellListener((e) => {});
             }
         });
-    } else if (clicked) {
-        sendXhr("POST", "/attack", {game: game, x: row, y: col}, function(data) {
+    }  else if (sonarPulse) {
+        sendXhr("POST","/sonar", {game: game, x: row, y: col} , function(data){
+            game = data;
+            redrawGrid();
+            sonarPulse = false;
+            document.getElementById("sonarPulse_button").classList.remove("clicked");
+            sonarPulseCount = sonarPulseCount - 1;
+        })
+    }  else if (clicked) {
+        sendXhr("POST", "/attack", {game: game, x: row, y:col}, function(data) {
             game = data;
             redrawGrid();
             attackselected = false;
@@ -155,13 +163,15 @@ function initGame() {
        registerCellListener(place(4));
     });
     document.getElementById("attack_button").addEventListener("click", function() {
-         this.classList.toggle("clicked");
-         if(clicked){
-         clicked = false;
-         }
-         else {
-         clicked = true;
-         }
+        if(sonarPulse == false){
+             this.classList.toggle("clicked");
+             if(clicked){
+             clicked = false;
+          }
+             else {
+          clicked = true;
+           }
+        }
     });
     document.getElementById("surrender_button").addEventListener("click", function(e) {
           alert("You surrender. :<");
@@ -174,7 +184,11 @@ function initGame() {
             sonarPulse = false;
             }
             else {
-            sonarPulse = true;
+                sonarPulse = true;
+                if(clicked){
+                    document.getElementById("attack_button").classList.remove("clicked");
+                    clicked = false;
+                }
             }
         }
     });

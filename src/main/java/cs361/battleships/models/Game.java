@@ -50,6 +50,10 @@ public class Game {
         return true;
     }
 
+    public boolean sonar(int x, char  y){
+        return true;
+    }
+
     private char randCol() {
         int random = new Random().nextInt(10);
         return (char) ('A' + random);
