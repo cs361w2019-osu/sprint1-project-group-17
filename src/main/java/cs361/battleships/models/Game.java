@@ -51,6 +51,17 @@ public class Game {
     }
 
     public boolean sonar(int x, char  y){
+        opponentsBoard.sonarPulse(x , y);
+        for(int i=1; i<3; i++){
+            opponentsBoard.sonarPulse(x+i,y);
+            opponentsBoard.sonarPulse(x-i,y);
+            opponentsBoard.sonarPulse(x,(char)(y+i));
+            opponentsBoard.sonarPulse(x,(char)(y-i));
+        }
+        opponentsBoard.sonarPulse(x+1,(char)(y+1));
+        opponentsBoard.sonarPulse(x+1,(char)(y-1));
+        opponentsBoard.sonarPulse(x-1,(char)(y+1));
+        opponentsBoard.sonarPulse(x-1,(char)(y-1));
         return true;
     }
 
