@@ -9,6 +9,8 @@ public class Square {
 	@JsonProperty private int row;
 	@JsonProperty private char column;
 	@JsonProperty private boolean hit = false;
+	@JsonProperty private boolean cap = false;
+	@JsonProperty private boolean capHit = false;
 
 	public Square() {
 	}
@@ -51,6 +53,22 @@ public class Square {
 
 	public void hit() {
 		hit = true;
+	}
+
+	public boolean isCapHit() {
+		return capHit;
+	}
+
+	public void capHit(){
+		capHit = true;
+	}
+
+	public boolean isCap() {
+		return cap;
+	}
+
+	public void cap() {
+		cap = true;
 	}
 
 	@Override

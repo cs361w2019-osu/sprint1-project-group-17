@@ -48,6 +48,7 @@ public class Ship {
 				occupiedSquares.add(new Square(row, (char) (col + i)));
 			}
 		}
+		occupiedSquares.get((size-2)).cap();
 	}
 
 	public boolean overlaps(Ship other) {
@@ -72,7 +73,20 @@ public class Ship {
 			return new Result(attackedLocation);
 		}
 		var attackedSquare = square.get();
-		if (attackedSquare.isHit()) {
+
+		if(attackedSquare.isCap() && this.getKind().equals("MINESWEEPER")){
+			attackedSquare.hit();
+			attackedSquare.capHit();
+		}
+
+		else if (attackedSquare.isCap() && !attackedSquare.isCapHit()){
+			attackedSquare.capHit();
+			var result = new Result(attackedLocation);
+			result.setResult(AtackStatus.BLOCKED);
+			return result;
+		}
+
+		else if (attackedSquare.isHit()) {
 			var result = new Result(attackedLocation);
 			result.setResult(AtackStatus.INVALID);
 			return result;
@@ -90,7 +104,11 @@ public class Ship {
 
 	@JsonIgnore
 	public boolean isSunk() {
-		return getOccupiedSquares().stream().allMatch(s -> s.isHit());
+		if (getOccupiedSquares().stream().allMatch(s -> s.isHit()))
+			return true;
+		if (getOccupiedSquares().stream().anyMatch((s -> (s.isHit() && s.isCapHit()))))
+			return true;
+		return false;
 	}
 
 	@Override

@@ -10,13 +10,14 @@ public class Board {
 
 	@JsonProperty private List<Ship> ships;
 	@JsonProperty private List<Result> attacks;
-
+	@JsonProperty private List<Result> blocks;
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
 	public Board() {
 		ships = new ArrayList<>();
 		attacks = new ArrayList<>();
+		blocks = new ArrayList<>();
 	}
 
 	/*
@@ -46,7 +47,10 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		Result attackResult = attack(new Square(x, y));
-		attacks.add(attackResult);
+		if (attackResult.getResult() == AtackStatus.BLOCKED)
+			blocks.add(attackResult);
+		else
+			attacks.add(attackResult);
 		return attackResult;
 	}
 
