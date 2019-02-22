@@ -95,4 +95,11 @@ public class BoardTest {
         assertFalse(board.placeShip(new Ship(""), 8, 'A', false));
 
     }
+
+    @Test
+    public void testSonarPulse() {
+        Ship testShip = new Ship("BATTLESHIP");
+        board.placeShip(testShip,1, 'A', true);
+        board.sonarPulse(1,'A');
+    }
 }
