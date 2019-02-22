@@ -44,6 +44,19 @@ public class BoardTest {
     }
 
     @Test
+    public void testCaptainsQuarters() {
+        Ship destroyer = new Ship("DESTROYER");
+        board.placeShip(destroyer, 1, 'A', true);
+        destroyer = board.getShips().get(0);
+        Result result = board.attack(2, 'A');
+        assertEquals(AtackStatus.BLOCKED, result.getResult());
+        assertEquals(null, result.getShip());
+        Result result2 = board.attack(2, 'A');
+        assertEquals(AtackStatus.SURRENDER, result2.getResult());
+        assertEquals(destroyer, result2.getShip());
+    }
+
+    @Test
     public void testAttackSameSquareMultipleTimes() {
         Ship minesweeper = new Ship("MINESWEEPER");
         board.placeShip(minesweeper, 1, 'A', true);
@@ -71,7 +84,7 @@ public class BoardTest {
     public void testPlaceMultipleShipsOfSameType() {
         assertTrue(board.placeShip(new Ship("MINESWEEPER"), 1, 'A', true));
         assertFalse(board.placeShip(new Ship("MINESWEEPER"), 5, 'D', true));
-
+        assertFalse(board.placeShip(new Ship("DESTROYER"), 1, 'A', true));
     }
 
     @Test

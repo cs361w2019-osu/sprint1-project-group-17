@@ -154,6 +154,8 @@ public class ShipTest {
         assertEquals(AtackStatus.HIT, result.getResult());
         result = minesweeper.attack(2, 'A');
         assertEquals(AtackStatus.INVALID, result.getResult());
+        result = minesweeper.attack(3, 'B');
+        assertEquals(AtackStatus.MISS,result.getResult());
     }
 
     @Test
@@ -162,7 +164,16 @@ public class ShipTest {
         minesweeper1.place('A', 1, true);
         Ship minesweeper2 = new Ship("MINESWEEPER");
         minesweeper2.place('A', 1, true);
+        Square square1 = new Square();
         assertTrue(minesweeper1.equals(minesweeper2));
         assertEquals(minesweeper1.hashCode(), minesweeper2.hashCode());
+        assertFalse(minesweeper1.equals(square1));
+    }
+
+    @Test
+    public void testToString() {
+        Ship minesweeper1 = new Ship("MINESWEEPER");
+        minesweeper1.place('A', 1, true);
+        assertEquals(minesweeper1.toString(), "MINESWEEPER[(1, A), (2, A)]");
     }
 }
