@@ -54,19 +54,6 @@ function markHits(board, elementId, surrenderText) {
                      document.getElementById("sonarPulse_button").classList.remove("hide");
                      document.getElementById("sonarPulse_counter").classList.remove("hide");
             }
-//        if(elementId === "opponent") {
-//            console.log(board.lastAttack);
-//            switch(board.lastAttack) {
-//                case 0:
-//                    document.getElementById("logText").innerHTML = className;
-//                case 1:
-//                    document.getElementById("logText").innerHTML = "miss";
-//                case 2:
-//                    document.getElementById("logText").innerHTML = "sonar";
-//                default:
-//                    document.getElementById("logText").innerHTML = className;
-//            }
-//        }
     });
     if(elementId === "opponent") {
         attack = board.attacks[board.attacks.length - 1];
