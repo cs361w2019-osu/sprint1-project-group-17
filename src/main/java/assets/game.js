@@ -27,7 +27,12 @@ function markHits(board, elementId, surrenderText) {
             else if (sonar.result === "HIT")
                 className = "hasShip";
             document.getElementById(elementId).rows[sonar.location.row-1].cells[sonar.location.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add(className);
-     });
+    });
+
+    board.blocks.forEach((block) => {
+        document.getElementById(elementId).rows[block.location.row-1].cells[block.location.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add("miss");
+    });
+
     board.attacks.forEach((attack) => {
         let className;
         if (attack.result === "MISS")
@@ -49,9 +54,32 @@ function markHits(board, elementId, surrenderText) {
                      document.getElementById("sonarPulse_button").classList.remove("hide");
                      document.getElementById("sonarPulse_counter").classList.remove("hide");
             }
-        if(elementId === "opponent")
-            document.getElementById("logText").innerHTML = className;
     });
+    if(elementId === "opponent") {
+        attack = board.attacks[board.attacks.length - 1];
+        if(typeof attack !== 'undefined') {
+            let className;
+                if (attack.result === "MISS")
+                    className = "miss";
+                else if (attack.result === "HIT")
+                    className = "hit";
+                else if (attack.result === "SUNK")
+                    className = "sink"
+            switch(board.lastAttack) {
+                case 0:
+                    document.getElementById("logText").innerHTML = className;
+                    break;
+                case 1:
+                    document.getElementById("logText").innerHTML = "miss";
+                    break;
+                case 2:
+                    document.getElementById("logText").innerHTML = "sonar";
+                    break;
+                default:
+                    document.getElementById("logText").innerHTML = className;
+            }
+        }
+    }
 }
 
 function redrawGrid() {

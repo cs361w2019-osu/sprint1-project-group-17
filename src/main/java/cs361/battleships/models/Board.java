@@ -12,6 +12,9 @@ public class Board {
 	@JsonProperty private List<Result> attacks;
 	@JsonProperty private List<Result> blocks;
 	@JsonProperty private List<Result> sonars;
+	// used by js for UI.
+	@JsonProperty private int lastAttack;
+
 	/*
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
@@ -20,6 +23,7 @@ public class Board {
 		attacks = new ArrayList<>();
 		blocks = new ArrayList<>();
 		sonars = new ArrayList<>();
+		lastAttack = 0;
 	}
 
 	/*
@@ -49,10 +53,13 @@ public class Board {
 	 */
 	public Result attack(int x, char y) {
 		Result attackResult = attack(new Square(x, y));
-		if (attackResult.getResult() == AtackStatus.BLOCKED)
+		if (attackResult.getResult() == AtackStatus.BLOCKED) {
 			blocks.add(attackResult);
-		else
+			lastAttack = 1;
+		} else {
 			attacks.add(attackResult);
+			lastAttack = 0;
+		}
 		return attackResult;
 	}
 
@@ -82,6 +89,7 @@ public class Board {
 		if(!s.isOutOfBounds() && !sonars.stream().anyMatch(r -> r.getLocation().equals(s))){
 			Result sonarResult = sonarPulseAttack(s);
 			sonars.add(sonarResult);
+			lastAttack = 2;
 		}
 	}
 

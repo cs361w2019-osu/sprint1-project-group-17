@@ -42,7 +42,7 @@ td:hover {
 }
 
 .empty {
-    background-color: gray;
+    background-color: darkgray;
 }
 
 .hasShip{
@@ -53,6 +53,10 @@ td:hover {
     background-color: black;
 }
 
+.miss {
+    background-color: blue;
+}
+
 .hit {
     background-color: orange;
 }
@@ -61,9 +65,6 @@ td:hover {
     background-color: red;
 }
 
-.miss {
-    background-color: blue;
-}
 
 
 .log {
