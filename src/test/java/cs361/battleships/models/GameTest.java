@@ -2,6 +2,7 @@ package cs361.battleships.models;
 
 import org.junit.Test;
 
+
 import static org.junit.Assert.*;
 
 public class GameTest {
@@ -10,7 +11,7 @@ public class GameTest {
 
     @Test
     public void testPlaceShip() {
-
+      
         assertTrue(game.placeShip(new Ship("MINESWEEPER"),1,'A',true));
         assertFalse(game.placeShip(new Ship("MINESWEEPER"),4,'A',true));
         assertFalse(game.placeShip(new Ship("DESTROYER"),1,'A',true));
@@ -30,3 +31,4 @@ public class GameTest {
         assertTrue(game.sonar(2,'A'));
     }
 }
+
