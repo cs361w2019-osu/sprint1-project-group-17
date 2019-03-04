@@ -12,6 +12,7 @@ public class Board {
 	@JsonProperty private List<Result> attacks;
 	@JsonProperty private List<Result> blocks;
 	@JsonProperty private List<Result> sonars;
+	@JsonProperty private List<Square> movedSquares;
 	// used by js for UI.
 	@JsonProperty private int lastAttack;
 
@@ -23,6 +24,7 @@ public class Board {
 		attacks = new ArrayList<>();
 		blocks = new ArrayList<>();
 		sonars = new ArrayList<>();
+		movedSquares = new ArrayList<>();
 		lastAttack = 0;
 	}
 
@@ -102,6 +104,33 @@ public class Board {
 		var hitShip = shipsAtLocation.get(0);
 		var sonarResult = hitShip.sonarAttack(s.getRow(), s.getColumn());
 		return sonarResult;
+	}
+
+	public boolean move(int dir){
+		ships.stream().forEach(s->s.move(dir));
+		if(overlap())
+			return false;
+		return true;
+	}
+
+	public boolean overlap(){
+		movedSquares = new ArrayList<>();
+		for(Ship s: ships){
+			s.getOccupiedSquares().forEach(q-> movedSquares.add(q));
+		}
+		int count;
+		for(Ship s: ships){
+			count = 0;
+			for(Square q: s.getOccupiedSquares()){
+				for(Square mq: movedSquares){
+					if(q.equals(mq))
+						count++;
+				}
+			}
+			if(count > s.getSize())
+				return true;
+		}
+		return false;
 	}
 
 	List<Ship> getShips() {

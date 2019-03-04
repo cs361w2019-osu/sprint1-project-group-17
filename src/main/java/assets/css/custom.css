@@ -49,12 +49,12 @@ td:hover {
     background-color: black;
 }
 
-.occupied {
-    background-color: black;
-}
-
 .miss {
     background-color: blue;
+}
+
+.occupied {
+    background-color: black;
 }
 
 .hit {
@@ -136,4 +136,8 @@ ul {
 
 .counter {
     margin: 5px 5px;
+}
+
+.mov-group .button {
+    float: left;
 }
