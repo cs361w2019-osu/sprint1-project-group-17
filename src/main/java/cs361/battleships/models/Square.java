@@ -47,6 +47,17 @@ public class Square {
 		return row > 10 || row < 1 || column > 'J' || column < 'A';
 	}
 
+	public boolean isMoveOutOfBounds(int dir) {
+		if(dir == 8)
+			return (row - 1) > 10 || (row - 1) < 1 || column > 'J' || column < 'A';
+		else if(dir == 2)
+			return (row + 1) > 10 || (row + 1) < 1 || column > 'J' || column < 'A';
+		else if(dir == 4)
+			return row > 10 || row < 1 || (char)(column - 1) > 'J' || (char)(column - 1) < 'A';
+		else
+			return row > 10 || row < 1 || (char)(column + 1) > 'J' || (char)(column + 1) < 'A';
+	}
+
 	public boolean isHit() {
 		return hit;
 	}
@@ -69,6 +80,17 @@ public class Square {
 
 	public void cap() {
 		cap = true;
+	}
+
+	public void move(int dir){
+		if(dir == 8)
+			row = row - 1;
+		else if (dir == 2)
+			row = row + 1;
+		else if (dir == 4)
+			column = (char)(column - 1);
+		else
+			column = (char)(column + 1);
 	}
 
 	@Override

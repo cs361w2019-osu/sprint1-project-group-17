@@ -6,6 +6,8 @@ var vertical;
 var clicked = false;
 var sonarPulseCount = 2;
 var sonarPulse = false;
+var sinkShip = 0;
+var moveCount = 0;
 
 function makeGrid(table, isPlayer) {
     for (i=0; i<10; i++) {
@@ -20,6 +22,7 @@ function makeGrid(table, isPlayer) {
 }
 
 function markHits(board, elementId, surrenderText) {
+    sinkShip = 0;
     board.sonars.forEach((sonar) => {
             let className;
             if (sonar.result === "MISS")
@@ -53,6 +56,9 @@ function markHits(board, elementId, surrenderText) {
                  if(elementId === "opponent")
                      document.getElementById("sonarPulse_button").classList.remove("hide");
                      document.getElementById("sonarPulse_counter").classList.remove("hide");
+                     sinkShip += 1;
+                     if(sinkShip == 2 && moveCount != 2)
+                        document.getElementById("move").classList.remove("hide");
             }
     });
     if(elementId === "opponent") {
@@ -231,6 +237,43 @@ function initGame() {
                 }
             }
         });
+    document.getElementById("mov-n").addEventListener("click", function() {
+        sendXhr("POST", "/move", {game: game, dir: 8}, function(data) {
+            game = data;
+            redrawGrid();
+            moveCount += 1;
+            if(moveCount == 2)
+                document.getElementById("move").classList.add("hide");
+        });
+    });
+    document.getElementById("mov-s").addEventListener("click", function() {
+        sendXhr("POST", "/move", {game: game, dir: 2}, function(data) {
+            game = data;
+            redrawGrid();
+            moveCount += 1;
+            if(moveCount == 2)
+                document.getElementById("move").classList.add("hide");
+        });
+    });
+    document.getElementById("mov-e").addEventListener("click", function() {
+        sendXhr("POST", "/move", {game: game, dir: 4}, function(data) {
+            game = data;
+            redrawGrid();
+            moveCount += 1;
+            if(moveCount == 2)
+                document.getElementById("move").classList.add("hide");
+        });
+    });
+    document.getElementById("mov-w").addEventListener("click", function() {
+        sendXhr("POST", "/move", {game: game, dir: 6}, function(data) {
+            game = data;
+            redrawGrid();
+            moveCount += 1;
+            if(moveCount == 2)
+                document.getElementById("move").classList.add("hide");
+        });
+    });
+
     sendXhr("GET", "/game", {}, function(data) {
         game = data;
     });
