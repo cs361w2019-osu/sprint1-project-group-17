@@ -201,6 +201,10 @@ function initGame() {
         shipType = "BATTLESHIP";
        registerCellListener(place(4));
     });
+    document.getElementById("place_submarine").addEventListener("click", function(e) {
+        shipType = "SUBMARINE";
+        registerCellListener(place(4));
+    });
     document.getElementById("attack_button").addEventListener("click", function() {
         if(sonarPulse == false){
            this.classList.toggle("clicked");
