@@ -19,7 +19,7 @@ public class Ship {
 	public Ship() {
 		occupiedSquares = new ArrayList<>();
 	}
-	
+
 	public Ship(String kind) {
 		this();
 		this.kind = kind;
@@ -47,7 +47,6 @@ public class Ship {
 		for (int i=0; i<size; i++) {
 			if (isVertical) {
 				occupiedSquares.add(new Square(row+i, col));
-
 			} else {
 				occupiedSquares.add(new Square(row, (char) (col + i)));
 			}
@@ -104,10 +103,6 @@ public class Ship {
 		result.setShip(this);
 		if (isSunk()) {
 			result.setResult(AtackStatus.SUNK);
-		}
-		var attackedSquare = square.get();
-		if (attackedSquare.isCap()){
-			return new Result(attackedLocation);
 		} else {
 			result.setResult(AtackStatus.HIT);
 		}
@@ -118,6 +113,10 @@ public class Ship {
 		var attackedLocation = new Square(x, y);
 		var square = getOccupiedSquares().stream().filter(s -> s.equals(attackedLocation)).findFirst();
 		if (!square.isPresent()) {
+			return new Result(attackedLocation);
+		}
+		var attackedSquare = square.get();
+		if (attackedSquare.isCap()){
 			return new Result(attackedLocation);
 		}
 		Result result = new Result(attackedSquare);
