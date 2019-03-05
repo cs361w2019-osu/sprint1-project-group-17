@@ -57,7 +57,7 @@ function markHits(board, elementId, surrenderText) {
                      document.getElementById("sonarPulse_button").classList.remove("hide");
                      document.getElementById("sonarPulse_counter").classList.remove("hide");
                      sinkShip += 1;
-                     //if(sinkShip == 2 && moveCount != 2)
+                     if(sinkShip == 2 && moveCount != 2)
                         document.getElementById("move").classList.remove("hide");
             }
     });
@@ -241,7 +241,7 @@ function initGame() {
         sendXhr("POST", "/move", {game: game, dir: 8}, function(data) {
             game = data;
             redrawGrid();
-            //moveCount += 1;
+            moveCount += 1;
             if(moveCount == 2)
                 document.getElementById("move").classList.add("hide");
         });
@@ -250,7 +250,7 @@ function initGame() {
         sendXhr("POST", "/move", {game: game, dir: 2}, function(data) {
             game = data;
             redrawGrid();
-            //moveCount += 1;
+            moveCount += 1;
             if(moveCount == 2)
                 document.getElementById("move").classList.add("hide");
         });
@@ -259,7 +259,7 @@ function initGame() {
         sendXhr("POST", "/move", {game: game, dir: 4}, function(data) {
             game = data;
             redrawGrid();
-            //moveCount += 1;
+            moveCount += 1;
             if(moveCount == 2)
                 document.getElementById("move").classList.add("hide");
         });
@@ -268,7 +268,7 @@ function initGame() {
         sendXhr("POST", "/move", {game: game, dir: 6}, function(data) {
             game = data;
             redrawGrid();
-            //moveCount += 1;
+            moveCount += 1;
             if(moveCount == 2)
                 document.getElementById("move").classList.add("hide");
         });

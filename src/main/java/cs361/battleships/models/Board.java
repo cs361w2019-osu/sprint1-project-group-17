@@ -68,7 +68,7 @@ public class Board {
 	private Result attack(Square s) {
 		if (attacks.stream().anyMatch(r -> r.getLocation().equals(s))) {
 			var attackResult = new Result(s);
-			attackResult.setResult(AtackStatus.INVALID);
+			attackResult.setResult(AtackStatus.MISS);
 			return attackResult;
 		}
 		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
@@ -110,11 +110,11 @@ public class Board {
 		ships.stream().forEach(s->s.move(dir));
 		if(overlap())
 			return false;
+		movedSquares = new ArrayList<>();
 		return true;
 	}
 
 	public boolean overlap(){
-		movedSquares = new ArrayList<>();
 		for(Ship s: ships){
 			s.getOccupiedSquares().forEach(q-> movedSquares.add(q));
 		}
