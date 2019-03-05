@@ -23,7 +23,6 @@ public class GameTest {
     @Test
     public void testAttack() {
         assertTrue(game.attack(1,'A'));
-        assertFalse(game.attack(1,'A'));
     }
 
     @Test
