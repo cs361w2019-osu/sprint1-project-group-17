@@ -65,6 +65,10 @@ public class Game {
         return true;
     }
 
+    public boolean move(int dir){
+        return playersBoard.move(dir);
+    }
+
     private char randCol() {
         int random = new Random().nextInt(10);
         return (char) ('A' + random);

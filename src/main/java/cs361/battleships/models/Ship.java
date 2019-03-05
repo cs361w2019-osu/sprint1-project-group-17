@@ -70,6 +70,10 @@ public class Ship {
 		return kind;
 	}
 
+	public int getSize() {
+		return size;
+	}
+
 	public Result attack(int x, char y) {
 		var attackedLocation = new Square(x, y);
 		var square = getOccupiedSquares().stream().filter(s -> s.equals(attackedLocation)).findFirst();
@@ -119,6 +123,17 @@ public class Ship {
 		Result result = new Result(attackedSquare);
 		result.setResult(AtackStatus.HIT);
 		return result;
+	}
+
+	public void move(int dir) {
+		if(canMove(dir) && !isSunk())
+			occupiedSquares.forEach(s -> s.move(dir));
+	}
+
+	public boolean canMove(int dir){
+		if(occupiedSquares.stream().anyMatch(s -> s.isMoveOutOfBounds(dir)))
+			return false;
+		return true;
 	}
 
 	@JsonIgnore
