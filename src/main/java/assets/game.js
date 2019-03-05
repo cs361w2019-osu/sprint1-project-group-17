@@ -127,6 +127,7 @@ function cellClick() {
             game = data;
             redrawGrid();
             placedShips++;
+            //can attack only after placing ships
             if (placedShips == 4) {
                 isSetup = false;
                 registerCellListener((e) => {});
