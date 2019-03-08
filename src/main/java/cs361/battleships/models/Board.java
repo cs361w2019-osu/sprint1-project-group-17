@@ -208,7 +208,9 @@ public class Board {
 
 	public boolean overlap(){
 		for(Ship s: ships){
-			s.getOccupiedSquares().forEach(q-> movedSquares.add(q));
+			if(!s.getKind().equals("SUBMARINE")) {
+				s.getOccupiedSquares().forEach(q -> movedSquares.add(q));
+			}
 		}
 		int count;
 		for(Ship s: ships){

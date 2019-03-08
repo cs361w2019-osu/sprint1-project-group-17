@@ -124,5 +124,6 @@ public class BoardTest {
         assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', false));
         assertTrue(board.placeShip(new Ship("DESTROYER"), 4, 'D', false));
         assertFalse(board.placeShip(new Ship("SUBMARINE"), 5, 'D', false));
+        assertTrue(board.placeShip(new Ship("SUBMARINE"), 6, 'D', false));
     }
 }
