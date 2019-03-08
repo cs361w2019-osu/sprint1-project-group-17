@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -41,6 +42,25 @@ public class Board {
 		}
 		final var placedShip = new Ship(ship.getKind());
 		placedShip.place(y, x, isVertical);
+
+		if(placedShip.getKind().equals("SUBMARINE")){
+			if(isSubUnder(placedShip)) {
+				String nameOfShip = "SUBMARINE";
+				for (Square s : placedShip.getOccupiedSquares()) {
+					var shipsAtLocation = ships.stream().filter(p -> p.isAtLocation(s)).collect(Collectors.toList());
+					if(shipsAtLocation.size() == 1){
+						if (nameOfShip.equals("SUBMARINE")){
+							nameOfShip = shipsAtLocation.get(0).getKind();
+						} else {
+							if(!shipsAtLocation.get(0).getKind().equals(nameOfShip)){
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
 		if (!placedShip.getKind().equals("SUBMARINE") && ships.stream().anyMatch(s -> s.overlaps(placedShip))) {
 			return false;
 		}
@@ -124,6 +144,10 @@ public class Board {
 			}
 		}
 		return attackResult;
+	}
+
+	public boolean isSubUnder(Ship sub){
+		return sub.getOccupiedSquares().stream().anyMatch(s-> ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList()).size() > 0 );
 	}
 
 	public boolean isSub(Square s){

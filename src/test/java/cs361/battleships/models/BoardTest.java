@@ -119,4 +119,10 @@ public class BoardTest {
         assertEquals(AtackStatus.SURRENDER,board.attack(5,'G').getResult());
     }
 
+    @Test
+    public void testSubOverlap() {
+        assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', false));
+        assertTrue(board.placeShip(new Ship("DESTROYER"), 4, 'D', false));
+        assertFalse(board.placeShip(new Ship("SUBMARINE"), 5, 'D', false));
+    }
 }
