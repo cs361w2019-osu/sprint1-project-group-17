@@ -53,12 +53,13 @@ function markHits(board, elementId, surrenderText) {
             attack.ship.occupiedSquares.forEach((square) => {
                 document.getElementById(elementId).rows[square.row-1].cells[square.column.charCodeAt(0) - 'A'.charCodeAt(0)].classList.add("sink");
                 });
-                 if(elementId === "opponent")
+                 if(elementId === "opponent"){
                      document.getElementById("sonarPulse_button").classList.remove("hide");
                      document.getElementById("sonarPulse_counter").classList.remove("hide");
                      sinkShip += 1;
                      if(sinkShip == 2 && moveCount != 2)
                         document.getElementById("move").classList.remove("hide");
+                 }
             }
     });
     if(elementId === "opponent") {
