@@ -10,6 +10,7 @@ public class Board {
 
 	@JsonProperty private List<Ship> ships;
 	@JsonProperty private List<Result> attacks;
+	@JsonProperty private List<Result> underwater;
 	@JsonProperty private List<Result> blocks;
 	@JsonProperty private List<Result> sonars;
 	@JsonProperty private List<Square> movedSquares;
@@ -22,6 +23,7 @@ public class Board {
 	public Board() {
 		ships = new ArrayList<>();
 		attacks = new ArrayList<>();
+		underwater = new ArrayList<>();
 		blocks = new ArrayList<>();
 		sonars = new ArrayList<>();
 		movedSquares = new ArrayList<>();
@@ -41,7 +43,7 @@ public class Board {
 		}
 		final var placedShip = new Ship(ship.getKind());
 		placedShip.place(y, x, isVertical);
-		if (ships.stream().anyMatch(s -> s.overlaps(placedShip))) {
+		if (!placedShip.getKind().equals("SUBMARINE") && ships.stream().anyMatch(s -> s.overlaps(placedShip))) {
 			return false;
 		}
 		if (placedShip.getOccupiedSquares().stream().anyMatch(s -> s.isOutOfBounds())) {
@@ -68,6 +70,31 @@ public class Board {
 
 	private Result attack(Square s) {
 		if (attacks.stream().anyMatch(r -> r.getLocation().equals(s))) {
+			for(Result a : attacks){
+				if(a.getLocation().equals(s) && (a.getResult() == AtackStatus.HIT || a.getResult() == AtackStatus.SUNK)){
+					var shipsAtLocation = ships.stream().filter(ship->ship.isAtLocation(s)).collect(Collectors.toList());
+					if(shipsAtLocation.size() == 2){
+						if(underwater.stream().noneMatch(r->r.getLocation().equals(s))){
+							var hitShip = shipsAtLocation.get(0);
+							if(!hitShip.getKind().equals("SUBMARINE")){
+								hitShip = shipsAtLocation.get(1);
+							}
+							var attackResult = hitShip.attack(s.getRow(), s.getColumn());
+							if (attackResult.getResult() == AtackStatus.SUNK) {
+								if (ships.stream().allMatch(ship -> ship.isSunk())) {
+									attackResult.setResult(AtackStatus.SURRENDER);
+								}
+							}
+							if(attackResult.getResult() != AtackStatus.BLOCKED) {
+								underwater.add(attackResult);
+							}
+							return attackResult;
+						}
+					}
+				}
+			}
+
+
 			var attackResult = new Result(s);
 			attackResult.setResult(AtackStatus.MISS);
 			return attackResult;
@@ -78,6 +105,19 @@ public class Board {
 			return attackResult;
 		}
 		var hitShip = shipsAtLocation.get(0);
+		if(shipsAtLocation.size() == 2) {
+			var normalShip = shipsAtLocation.get(0);
+			var subShip = shipsAtLocation.get(1);
+			if(normalShip.getKind().equals("SUBMARINE")){
+				normalShip = shipsAtLocation.get(1);
+				subShip = shipsAtLocation.get(0);
+			}
+			if(normalShip.isSunk()){
+				hitShip = subShip;
+			} else {
+				hitShip = normalShip;
+			}
+		}
 		var attackResult = hitShip.attack(s.getRow(), s.getColumn());
 		if (attackResult.getResult() == AtackStatus.SUNK) {
 			if (ships.stream().allMatch(ship -> ship.isSunk())) {
