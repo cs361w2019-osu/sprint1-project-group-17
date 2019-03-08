@@ -63,6 +63,7 @@ function markHits(board, elementId, surrenderText) {
     });
     if(elementId === "opponent") {
         attack = board.attacks[board.attacks.length - 1];
+        previousAttack = board.attacks[board.attacks.length - 2];
         if(typeof attack !== 'undefined') {
             let className;
                 if (attack.result === "MISS")
@@ -71,6 +72,15 @@ function markHits(board, elementId, surrenderText) {
                     className = "hit";
                 else if (attack.result === "SUNK")
                     className = "sink"
+            if(typeof attack !== 'undefined') {
+                let className2;
+                    if (previousAttack.result === "MISS")
+                        className2 = "miss";
+                    else if (previousAttack === "HIT")
+                        className2 = "hit";
+                    else if (previousAttack === "SUNK")
+                        className2 = "sink"
+            }
             switch(board.lastAttack) {
                 case 0:
                     document.getElementById("logText").innerHTML = className;
@@ -81,6 +91,8 @@ function markHits(board, elementId, surrenderText) {
                 case 2:
                     document.getElementById("logText").innerHTML = "sonar";
                     break;
+                case 100:
+                    document.getElementById("logText").innerHTML = className + " and " + className2;
                 default:
                     document.getElementById("logText").innerHTML = className;
             }

@@ -15,6 +15,7 @@ public class Ship {
 	@JsonProperty private String kind;
 	@JsonProperty private List<Square> occupiedSquares;
 	@JsonProperty private int size;
+	@JsonProperty private boolean submerged;
 
 	public Ship() {
 		occupiedSquares = new ArrayList<>();
@@ -23,6 +24,7 @@ public class Ship {
 	public Ship(String kind) {
 		this();
 		this.kind = kind;
+		this.submerged = false;
 		switch(kind) {
 			case "MINESWEEPER":
 				size = 2;
@@ -68,6 +70,10 @@ public class Ship {
 
 	public int getSize() {
 		return size;
+	}
+
+	public boolean isSubmerged() {
+		return submerged;
 	}
 
 	public Result attack(int x, char y) {

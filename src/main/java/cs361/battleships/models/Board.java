@@ -54,15 +54,42 @@ public class Board {
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
 	public Result attack(int x, char y) {
-		Result attackResult = attack(new Square(x, y));
-		if (attackResult.getResult() == AtackStatus.BLOCKED) {
-			blocks.add(attackResult);
-			lastAttack = 1;
+		if (ships.stream().anyMatch(ship -> ship.isSunk())) {
+			List<Result> attackResults = laserAttack(new Square(x, y));
+			if (attackResults.get(0).getResult() == AtackStatus.BLOCKED) {
+				blocks.add(attackResults.get(0));
+				lastAttack = 1;
+			} else {
+				attacks.add(attackResults.get(0));
+				lastAttack = 0;
+			}
+			if (attackResults.size() == 2) {
+				if (attackResults.get(1).getResult() == AtackStatus.BLOCKED) {
+					blocks.add(attackResults.get(1));
+				} else {
+					attacks.add(attackResults.get(1));
+				}
+
+				if (attackResults.get(0).getResult() == AtackStatus.BLOCKED && attackResults.get(1).getResult() == AtackStatus.BLOCKED) {
+					lastAttack = 1;
+				} else if (attackResults.get(0).getResult() == AtackStatus.BLOCKED || attackResults.get(1).getResult() == AtackStatus.BLOCKED) {
+					lastAttack = 0;
+				} else { // two ships were cleanly hit
+					lastAttack = 100;
+				}
+			}
+			return attackResults.get(0);
 		} else {
-			attacks.add(attackResult);
-			lastAttack = 0;
+			Result attackResult = attack(new Square(x, y));
+			if (attackResult.getResult() == AtackStatus.BLOCKED) {
+				blocks.add(attackResult);
+				lastAttack = 1;
+			} else {
+				attacks.add(attackResult);
+				lastAttack = 0;
+			}
+			return attackResult;
 		}
-		return attackResult;
 	}
 
 	private Result attack(Square s) {
@@ -71,7 +98,7 @@ public class Board {
 			attackResult.setResult(AtackStatus.MISS);
 			return attackResult;
 		}
-		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
+		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s) && !ship.isSubmerged()).collect(Collectors.toList());
 		if (shipsAtLocation.size() == 0) {
 			var attackResult = new Result(s);
 			return attackResult;
@@ -84,6 +111,51 @@ public class Board {
 			}
 		}
 		return attackResult;
+	}
+
+	private List<Result> laserAttack(Square s) {
+//		if (attacks.stream().anyMatch(r -> r.getLocation().equals(s))) {
+//			var attackResult = new Result(s);
+//			attackResult.setResult(AtackStatus.MISS);
+//			return attackResult;
+//		}
+		List<Result> attackResults = new ArrayList<>();
+		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
+
+		if (shipsAtLocation.size() == 0) {
+			var attackResult = new Result(s);
+			attackResults.add(attackResult);
+			return attackResults;
+		}
+
+		var hitShip1 = shipsAtLocation.get(0);
+		var attackResult1 = hitShip1.attack(s.getRow(), s.getColumn());
+		if (attackResult1.getResult() == AtackStatus.SUNK) {
+			if (ships.stream().allMatch(ship -> ship.isSunk())) {
+				attackResult1.setResult(AtackStatus.SURRENDER);
+			}
+		}
+		if (attackResult1.getResult() != AtackStatus.INVALID) {
+			attackResults.add(attackResult1);
+		}
+
+		if (shipsAtLocation.size() == 2) {
+			var hitShip2 = shipsAtLocation.get(1);
+			var attackResult2 = hitShip2.attack(s.getRow(), s.getColumn());
+			if (attackResult2.getResult() == AtackStatus.SUNK) {
+				if (ships.stream().allMatch(ship -> ship.isSunk())) {
+					attackResult2.setResult(AtackStatus.SURRENDER);
+				}
+			}
+			if (attackResult2.getResult() != AtackStatus.INVALID) {
+				attackResults.add(attackResult2);
+			}
+		}
+		if (attackResults.size() == 0) {
+			var attacksNotValid = new Result(s);
+			attackResults.add(attacksNotValid);
+		}
+		return attackResults;
 	}
 
 	public void sonarPulse(int x , char y){
