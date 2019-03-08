@@ -106,33 +106,17 @@ public class BoardTest {
 
     @Test
     public void testSubmarine() {
-        assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', true));
-        assertTrue(board.placeShip(new Ship("SUBMARINE"), 5, 'D', true));
+        assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', false));
+        assertTrue(board.placeShip(new Ship("SUBMARINE"), 5, 'D', false));
+        Square s = new Square(4, 'F');
+        assertTrue(board.isSub(s));
         assertEquals(AtackStatus.HIT,board.attack(5,'D').getResult());
-        assertEquals(AtackStatus.HIT,board.attack(5,'D').getResult());
-        assertEquals(AtackStatus.MISS,board.attack(5,'D').getResult());
-        assertEquals(AtackStatus.BLOCKED,board.attack(7,'D').getResult());
-        assertEquals(AtackStatus.SUNK,board.attack(7,'D').getResult());
-        assertEquals(AtackStatus.HIT,board.attack(7,'D').getResult());
-        assertEquals(AtackStatus.MISS,board.attack(7,'D').getResult());
+        assertEquals(AtackStatus.MISS,board.attack(4,'F').getResult());
+        assertEquals(AtackStatus.BLOCKED,board.attack(5,'F').getResult());
+        assertEquals(AtackStatus.SUNK,board.attack(5,'F').getResult());
+        assertEquals(AtackStatus.HIT,board.attack(4,'F').getResult());
+        assertEquals(AtackStatus.BLOCKED,board.attack(5,'G').getResult());
+        assertEquals(AtackStatus.SURRENDER,board.attack(5,'G').getResult());
     }
 
-    @Test
-    public void testSubSunk() {
-        assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', true));
-        assertTrue(board.placeShip(new Ship("SUBMARINE"), 5, 'D', true));
-        assertEquals(AtackStatus.HIT ,board.attack(8,'D').getResult());
-        assertEquals(AtackStatus.BLOCKED ,board.attack(8,'D').getResult());
-        assertEquals(AtackStatus.SUNK ,board.attack(8,'D').getResult());
-    }
-
-    @Test
-    public void testAfterSunk(){
-        assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', true));
-        assertTrue(board.placeShip(new Ship("SUBMARINE"), 5, 'D', true));
-        assertEquals(AtackStatus.BLOCKED ,board.attack(7,'D').getResult());
-        assertEquals(AtackStatus.SUNK ,board.attack(7,'D').getResult());
-        assertEquals(AtackStatus.BLOCKED ,board.attack(8,'D').getResult());
-        assertEquals(AtackStatus.SURRENDER ,board.attack(8,'D').getResult());
-    }
 }
