@@ -61,7 +61,7 @@ public class Board {
 			}
 		}
 
-		if (!placedShip.getKind().equals("SUBMARINE") && ships.stream().anyMatch(s -> s.overlaps(placedShip))) {
+		if (!placedShip.getKind().equals("SUBMARINE") && ships.stream().anyMatch(s -> s.overlaps(placedShip) && !s.getKind().equals("SUBMARINE"))) {
 			return false;
 		}
 		if (placedShip.getOccupiedSquares().stream().anyMatch(s -> s.isOutOfBounds())) {
@@ -87,64 +87,91 @@ public class Board {
 	}
 
 	private Result attack(Square s) {
+		boolean laserWeapon = ships.stream().anyMatch(ship -> ship.isSunk());
+		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
+		int numShips = shipsAtLocation.size();
+		var attackResult = new Result(s);
 
-		if(isSub(s)){
-			var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
-			if(shipsAtLocation.size() == 1){
-				if(!canHitSub(s)) {
-					var attackResult = new Result(s);
-					attackResult.setResult(AtackStatus.MISS);
+		if (numShips == 0) {
+			return attackResult;
+		} else if (numShips == 1) {
+			var hitship = shipsAtLocation.get(0);
+			if (hitship.getKind().equals("SUBMARINE")) {
+				// if the sub is submerged and we don't have the laser weapon we miss
+				// otherwise we hit the sub
+				if (ships.stream().anyMatch(ship -> ship.overlaps(hitship) && !ship.equals(hitship)) && !laserWeapon) {
 					return attackResult;
-				}	else {
-					var hitShip = shipsAtLocation.get(0);
-					var attackResult = hitShip.attack(s.getRow(), s.getColumn());
+				} else {
+					attackResult = hitship.attack(s.getRow(), s.getColumn());
 					if (attackResult.getResult() == AtackStatus.SUNK) {
 						if (ships.stream().allMatch(ship -> ship.isSunk())) {
 							attackResult.setResult(AtackStatus.SURRENDER);
 						}
 					}
-					return attackResult;
+					if (attackResult.getResult() != AtackStatus.INVALID) {
+						return attackResult;
+					} else {
+						attackResult.setResult(AtackStatus.MISS);
+						return attackResult;
+					}
 				}
 			} else {
-				var norShip = shipsAtLocation.get(0);
-				var subShip = shipsAtLocation.get(1);
-				if(norShip.getKind().equals("SUBMARINE")){
-					norShip = shipsAtLocation.get(1);
-					subShip = shipsAtLocation.get(0);
-				}
-				var hitShip = norShip;
-				if(canHitSub(s)){
-					hitShip = subShip;
-				}
-				var attackResult = hitShip.attack(s.getRow(), s.getColumn());
+				attackResult = hitship.attack(s.getRow(), s.getColumn());
 				if (attackResult.getResult() == AtackStatus.SUNK) {
 					if (ships.stream().allMatch(ship -> ship.isSunk())) {
 						attackResult.setResult(AtackStatus.SURRENDER);
 					}
 				}
-				return attackResult;
+				if (attackResult.getResult() != AtackStatus.INVALID) {
+					return attackResult;
+				} else {
+					attackResult.setResult(AtackStatus.MISS);
+					return attackResult;
+				}
 			}
-		}
-
-		if (attacks.stream().anyMatch(r -> r.getLocation().equals(s))) {
-			var attackResult = new Result(s);
+		} else if (numShips == 2) {
+			var norShip = shipsAtLocation.get(0);
+			var subShip = shipsAtLocation.get(1);
+			if (norShip.getKind().equals("SUBMARINE")) {
+				norShip = shipsAtLocation.get(1);
+				subShip = shipsAtLocation.get(0);
+			}
+			// if we don't have the laser weapon attack only the surface ship
+			attackResult = norShip.attack(s.getRow(), s.getColumn());
+			if (attackResult.getResult() == AtackStatus.SUNK) {
+				if (ships.stream().allMatch(ship -> ship.isSunk())) {
+					attackResult.setResult(AtackStatus.SURRENDER);
+				}
+			}
+			// if we have the laser weapon attack the submarine too
+			if (laserWeapon) {
+				var attackResult2 = subShip.attack(s.getRow(), s.getColumn());
+				if (attackResult2.getResult() == AtackStatus.SUNK) {
+					if (ships.stream().allMatch(ship -> ship.isSunk())) {
+						attackResult2.setResult(AtackStatus.SURRENDER);
+					}
+				}
+				attacks.add(attackResult);
+				if (attackResult2.getResult() != AtackStatus.INVALID) {
+					return attackResult2;
+				} else {
+					attackResult2.setResult(AtackStatus.MISS);
+					return attackResult2;
+				}
+			} else {
+				if (attackResult.getResult() != AtackStatus.INVALID) {
+					return attackResult;
+				} else {
+					attackResult.setResult(AtackStatus.MISS);
+					return attackResult;
+				}
+			}
+		} else {
 			attackResult.setResult(AtackStatus.MISS);
 			return attackResult;
 		}
-		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
-		if (shipsAtLocation.size() == 0) {
-			var attackResult = new Result(s);
-			return attackResult;
-		}
-		var hitShip = shipsAtLocation.get(0);
-		var attackResult = hitShip.attack(s.getRow(), s.getColumn());
-		if (attackResult.getResult() == AtackStatus.SUNK) {
-			if (ships.stream().allMatch(ship -> ship.isSunk())) {
-				attackResult.setResult(AtackStatus.SURRENDER);
-			}
-		}
-		return attackResult;
 	}
+
 
 	public boolean isSubUnder(Ship sub){
 		return sub.getOccupiedSquares().stream().anyMatch(s-> ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList()).size() > 0 );
@@ -156,23 +183,6 @@ public class Board {
 			var hitShip = shipsAtLocation.get(0);
 			if(hitShip.getOccupiedSquares().stream().anyMatch(q -> ships.stream().filter(ship -> ship.isAtLocation(q)).collect(Collectors.toList()).size() >= 2)){
 				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean canHitSub(Square s){
-		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
-		for(Square q : shipsAtLocation.get(0).getOccupiedSquares()) {
-			if (ships.stream().filter(ship -> ship.isAtLocation(q)).collect(Collectors.toList()).size() == 2) {
-				shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(q)).collect(Collectors.toList());
-				var norShip = shipsAtLocation.get(0);
-				var subShip = shipsAtLocation.get(1);
-				if (norShip.getKind().equals("SUBMARINE")) {
-					norShip = shipsAtLocation.get(1);
-					subShip = shipsAtLocation.get(0);
-				}
-				return norShip.isSunk();
 			}
 		}
 		return false;
