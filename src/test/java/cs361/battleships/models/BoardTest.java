@@ -127,12 +127,15 @@ public class BoardTest {
         assertTrue(board.placeShip(new Ship("SUBMARINE"), 6, 'D', false));
     }
 
+
     @Test
     public void testMove() {
-        board.placeShip(new Ship("BATTLESHIP"), 5, 'D', false);
-        board.placeShip(new Ship("DESTROYER"), 4, 'D', false);
-        board.placeShip(new Ship("SUBMARINE"), 5, 'D', false);
-        board.placeShip(new Ship("SUBMARINE"), 6, 'D', false);
-        assertTrue(board.move(1));
+        board.placeShip(new Ship("MINESWEEPER"), 1, 'A', true);
+        board.placeShip(new Ship("DESTROYER"), 2, 'B', true);
+        assertTrue(board.move(2));
+        assertFalse(board.move(4));
+        assertFalse(board.move(2));
+
+
     }
 }
