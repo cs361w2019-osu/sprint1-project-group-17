@@ -88,10 +88,11 @@ public class BoardTest {
     }
 
     @Test
-    public void testCantPlaceMoreThan3Ships() {
+    public void testCantPlaceMoreThan4Ships() {
         assertTrue(board.placeShip(new Ship("MINESWEEPER"), 1, 'A', true));
         assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', true));
         assertTrue(board.placeShip(new Ship("DESTROYER"), 6, 'A', false));
+        assertTrue(board.placeShip(new Ship("SUBMARINE"), 8, 'A', false));
         assertFalse(board.placeShip(new Ship(""), 8, 'A', false));
 
     }
@@ -101,5 +102,28 @@ public class BoardTest {
         Ship testShip = new Ship("BATTLESHIP");
         board.placeShip(testShip,1, 'A', true);
         board.sonarPulse(1,'A');
+    }
+
+    @Test
+    public void testSubmarine() {
+        assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', false));
+        assertTrue(board.placeShip(new Ship("SUBMARINE"), 5, 'D', false));
+        Square s = new Square(4, 'F');
+        assertTrue(board.isSub(s));
+        assertEquals(AtackStatus.HIT,board.attack(5,'D').getResult());
+        assertEquals(AtackStatus.MISS,board.attack(4,'F').getResult());
+        assertEquals(AtackStatus.BLOCKED,board.attack(5,'F').getResult());
+        assertEquals(AtackStatus.SUNK,board.attack(5,'F').getResult());
+        assertEquals(AtackStatus.HIT,board.attack(4,'F').getResult());
+        assertEquals(AtackStatus.BLOCKED,board.attack(5,'G').getResult());
+        assertEquals(AtackStatus.SURRENDER,board.attack(5,'G').getResult());
+    }
+
+    @Test
+    public void testSubOverlap() {
+        assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', false));
+        assertTrue(board.placeShip(new Ship("DESTROYER"), 4, 'D', false));
+        assertFalse(board.placeShip(new Ship("SUBMARINE"), 5, 'D', false));
+        assertTrue(board.placeShip(new Ship("SUBMARINE"), 6, 'D', false));
     }
 }

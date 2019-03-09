@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class Board {
@@ -32,7 +33,8 @@ public class Board {
 	DO NOT change the signature of this method. It is used by the grading scripts.
 	 */
 	public boolean placeShip(Ship ship, int x, char y, boolean isVertical) {
-		if (ships.size() >= 3) {
+		// if more than 4 ships placed then cant place ship
+	    if (ships.size() >= 4) {
 			return false;
 		}
 		if (ships.stream().anyMatch(s -> s.getKind().equals(ship.getKind()))) {
@@ -40,7 +42,26 @@ public class Board {
 		}
 		final var placedShip = new Ship(ship.getKind());
 		placedShip.place(y, x, isVertical);
-		if (ships.stream().anyMatch(s -> s.overlaps(placedShip))) {
+
+		if(placedShip.getKind().equals("SUBMARINE")){
+			if(isSubUnder(placedShip)) {
+				String nameOfShip = "SUBMARINE";
+				for (Square s : placedShip.getOccupiedSquares()) {
+					var shipsAtLocation = ships.stream().filter(p -> p.isAtLocation(s)).collect(Collectors.toList());
+					if(shipsAtLocation.size() == 1){
+						if (nameOfShip.equals("SUBMARINE")){
+							nameOfShip = shipsAtLocation.get(0).getKind();
+						} else {
+							if(!shipsAtLocation.get(0).getKind().equals(nameOfShip)){
+								return false;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (!placedShip.getKind().equals("SUBMARINE") && ships.stream().anyMatch(s -> s.overlaps(placedShip))) {
 			return false;
 		}
 		if (placedShip.getOccupiedSquares().stream().anyMatch(s -> s.isOutOfBounds())) {
@@ -66,6 +87,45 @@ public class Board {
 	}
 
 	private Result attack(Square s) {
+
+		if(isSub(s)){
+			var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
+			if(shipsAtLocation.size() == 1){
+				if(!canHitSub(s)) {
+					var attackResult = new Result(s);
+					attackResult.setResult(AtackStatus.MISS);
+					return attackResult;
+				}	else {
+					var hitShip = shipsAtLocation.get(0);
+					var attackResult = hitShip.attack(s.getRow(), s.getColumn());
+					if (attackResult.getResult() == AtackStatus.SUNK) {
+						if (ships.stream().allMatch(ship -> ship.isSunk())) {
+							attackResult.setResult(AtackStatus.SURRENDER);
+						}
+					}
+					return attackResult;
+				}
+			} else {
+				var norShip = shipsAtLocation.get(0);
+				var subShip = shipsAtLocation.get(1);
+				if(norShip.getKind().equals("SUBMARINE")){
+					norShip = shipsAtLocation.get(1);
+					subShip = shipsAtLocation.get(0);
+				}
+				var hitShip = norShip;
+				if(canHitSub(s)){
+					hitShip = subShip;
+				}
+				var attackResult = hitShip.attack(s.getRow(), s.getColumn());
+				if (attackResult.getResult() == AtackStatus.SUNK) {
+					if (ships.stream().allMatch(ship -> ship.isSunk())) {
+						attackResult.setResult(AtackStatus.SURRENDER);
+					}
+				}
+				return attackResult;
+			}
+		}
+
 		if (attacks.stream().anyMatch(r -> r.getLocation().equals(s))) {
 			var attackResult = new Result(s);
 			attackResult.setResult(AtackStatus.MISS);
@@ -84,6 +144,38 @@ public class Board {
 			}
 		}
 		return attackResult;
+	}
+
+	public boolean isSubUnder(Ship sub){
+		return sub.getOccupiedSquares().stream().anyMatch(s-> ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList()).size() > 0 );
+	}
+
+	public boolean isSub(Square s){
+		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
+		if(shipsAtLocation.size() != 0){
+			var hitShip = shipsAtLocation.get(0);
+			if(hitShip.getOccupiedSquares().stream().anyMatch(q -> ships.stream().filter(ship -> ship.isAtLocation(q)).collect(Collectors.toList()).size() >= 2)){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean canHitSub(Square s){
+		var shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(s)).collect(Collectors.toList());
+		for(Square q : shipsAtLocation.get(0).getOccupiedSquares()) {
+			if (ships.stream().filter(ship -> ship.isAtLocation(q)).collect(Collectors.toList()).size() == 2) {
+				shipsAtLocation = ships.stream().filter(ship -> ship.isAtLocation(q)).collect(Collectors.toList());
+				var norShip = shipsAtLocation.get(0);
+				var subShip = shipsAtLocation.get(1);
+				if (norShip.getKind().equals("SUBMARINE")) {
+					norShip = shipsAtLocation.get(1);
+					subShip = shipsAtLocation.get(0);
+				}
+				return norShip.isSunk();
+			}
+		}
+		return false;
 	}
 
 	public void sonarPulse(int x , char y){
@@ -116,7 +208,9 @@ public class Board {
 
 	public boolean overlap(){
 		for(Ship s: ships){
-			s.getOccupiedSquares().forEach(q-> movedSquares.add(q));
+			if(!s.getKind().equals("SUBMARINE")) {
+				s.getOccupiedSquares().forEach(q -> movedSquares.add(q));
+			}
 		}
 		int count;
 		for(Ship s: ships){
